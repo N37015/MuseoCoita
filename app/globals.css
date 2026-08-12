@@ -1,0 +1,306 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   PALETA UNIFICADA — Explora Ocozocoautla (Dark Glass Theme)
+   ========================================================================== */
+:root {
+  /* 1. Fondos y Capas Transparentes (Efecto Vidrio) */
+  --bg-base: #030712;               /* gray-950 - Fondo profundo del body */
+  --bg-surface: #111827;            /* gray-900 - Fondo de modales/paneles sólidos */
+  --bg-glass-heavy: rgba(17, 24, 39, 0.6); /* gray-900/60 - Corazón del glassmorphism */
+  --bg-glass-light: rgba(17, 24, 39, 0.4); /* gray-900/40 - Header y paneles ligeros */
+  --bg-glass-hover: rgba(17, 24, 39, 0.8); /* gray-900/80 - Hover en glass */
+
+  /* 2. Bordes y Contornos */
+  --border-glass: rgba(255, 255, 255, 0.1);       /* white/10 - Reflejo sutil del vidrio */
+  --border-glass-hover: rgba(255, 255, 255, 0.2); /* white/20 - Reflejo al pasar el mouse */
+
+  /* 3. Textos y Contraste */
+  --text-main: #ffffff;             /* white - Títulos principales */
+  --text-normal: #e5e7eb;           /* gray-200 - Texto normal */
+  --text-muted: #d1d5db;            /* gray-300 - Descripciones */
+  --text-subtle: #9ca3af;           /* gray-400 - Fechas y placeholders */
+
+  /* 4. Detalles y Acentos (Celestes y Azules) */
+  --accent-main: #38bdf8;           /* sky-400 - Textos, bordes y botones sutiles */
+  --accent-bg: #0284c7;             /* sky-600 - Botones principales */
+  --accent-hover: #0ea5e9;          /* sky-500 - Hover de botones principales */
+  --accent-glass: rgba(56, 189, 248, 0.15); /* sky-400/15 - Fondos sutiles celestes */
+
+  /* Estados Universales */
+  --color-danger: #ef4444;          /* red-500 */
+  --color-danger-glass: rgba(239, 68, 68, 0.1); 
+  --color-success: #10b981;         /* emerald-500 */
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-normal);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-main);
+    @apply font-bold tracking-tight drop-shadow-sm;
+  }
+}
+
+@layer components {
+  .container {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ---- Botones Unificados ---- */
+  .btn {
+    @apply py-3 px-6 rounded-xl font-bold tracking-wide transition-all duration-300 ease-in-out inline-flex items-center justify-center gap-2 shadow-lg;
+  }
+  .btn-primary {
+    background-color: var(--accent-bg);
+    color: var(--text-main);
+    border: 1px solid transparent;
+  }
+  .btn-primary:hover {
+    background-color: var(--accent-hover);
+    box-shadow: 0 0 15px var(--accent-glass);
+  }
+  .btn-secondary {
+    background-color: var(--bg-glass-light);
+    color: var(--text-normal);
+    border: 1px solid var(--border-glass);
+    @apply backdrop-blur-md;
+  }
+  .btn-secondary:hover {
+    background-color: var(--bg-glass-hover);
+    border-color: var(--border-glass-hover);
+    color: var(--text-main);
+  }
+  .btn-danger {
+    background-color: var(--color-danger);
+    color: var(--text-main);
+  }
+
+  /* ---- Superficies (Glassmorphism Puro) ---- */
+  .surface {
+    background-color: var(--bg-glass-heavy);
+    border: 1px solid var(--border-glass);
+    @apply backdrop-blur-xl shadow-2xl;
+  }
+  .surface-subtle {
+    background-color: var(--bg-glass-light);
+    border: 1px solid var(--border-glass);
+    @apply backdrop-blur-md;
+  }
+/* Tarjeta estándar usada por listados */
+  .card {
+    /* Borramos el background-color y border de aquí para que Tailwind controle todo */
+    @apply rounded-2xl shadow-xl backdrop-blur-xl transition-all duration-300;
+  }
+  
+  .card:hover {
+    @apply shadow-2xl scale-[1.01];
+  }
+  
+  .place-card {
+    @apply card overflow-hidden flex flex-col;
+  }
+  /* Insignia / badge de categoría (Acento celeste brillante) */
+  .badge {
+    background-color: var(--accent-glass);
+    color: var(--accent-main);
+    border: 1px solid var(--border-glass);
+    @apply text-xs font-bold uppercase px-3 py-1.5 rounded-full tracking-widest inline-block backdrop-blur-md shadow-sm;
+  }
+
+  /* Título de sección */
+  .section-title {
+    color: var(--text-main);
+    @apply text-2xl sm:text-4xl font-black tracking-tight drop-shadow-md;
+  }
+
+  /* ---- Formularios (Inputs modo vidrio) ---- */
+  .form-control {
+    background-color: var(--bg-glass-heavy);
+    border: 1px solid var(--border-glass);
+    color: var(--text-main);
+    @apply w-full p-3 rounded-xl outline-none transition-all shadow-inner backdrop-blur-md placeholder:text-gray-400;
+  }
+  .form-control:focus {
+    border-color: var(--accent-main);
+    background-color: var(--bg-surface);
+    box-shadow: 0 0 0 2px var(--accent-glass);
+  }
+  .form-group label {
+    color: var(--text-muted);
+    @apply block font-bold mb-2 text-xs uppercase tracking-wider;
+  }
+
+  /* ---- Elementos de UI flotantes (Header, Modales) ---- */
+  .panel-dark {
+    background-color: var(--bg-glass-heavy);
+    border: 1px solid var(--border-glass);
+    color: var(--text-main);
+    @apply backdrop-blur-2xl shadow-2xl;
+  }
+}
+
+/* ==========================================================================
+   ESTILOS DE IMPRESIÓN (PARA GENERAR PDF Y MANDAR A IMPRESORA)
+   El fondo oscuro no se imprimirá, la hoja física seguirá siendo blanca.
+   ========================================================================== */
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  header, nav, footer, aside, .modal-overlay {
+    display: none !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 0mm;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+    background-color: white !important;
+    color: black !important;
+    margin: 0;
+    padding: 1.5cm;
+    font-family: sans-serif;
+  }
+
+  .screen-only { display: none !important; }
+  .print-only { display: block !important; }
+
+  .print-top-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    border-bottom: 3px solid #000;
+    padding-bottom: 16px;
+  }
+
+  .print-logo-container {
+    background-color: #000; /* Aseguramos contraste al imprimir */
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .print-logo {
+    height: 48px;
+    object-fit: contain;
+  }
+
+  .print-header-text {
+    display: flex;
+    flex-direction: column;
+    color: #000;
+  }
+
+  .print-header-explora {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+
+  .print-header-oco {
+    font-size: 30px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    line-height: 1.1;
+  }
+
+  .print-category-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 16px;
+    margin-bottom: 12px;
+    color: #000;
+    background-color: #f3f4f6; /* Gris muy claro para papel */
+    padding: 6px 12px;
+    border-radius: 4px;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .print-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .print-card {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: white;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .print-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+  }
+
+  .print-card-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    margin: 0 0 4px 0;
+    line-height: 1.1;
+  }
+
+  .print-card-address {
+    font-size: 12px;
+    color: #4b5563;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+  }
+
+  .print-sections-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    margin-top: auto;
+    border-top: 1px dotted #ccc;
+    padding-top: 8px;
+  }
+
+  .print-section-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .print-section-label {
+    font-size: 10px;
+    font-weight: bold;
+    color: #6b7280;
+    text-transform: uppercase;
+  }
+
+  .print-section-value {
+    font-size: 12px;
+    color: #000;
+    word-break: break-word;
+  }
+}
