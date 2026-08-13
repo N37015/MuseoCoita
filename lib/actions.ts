@@ -1,17 +1,8 @@
 'use server';
 
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from './supabaseClient';
 import { v4 as uuidv4 } from 'uuid';
 
-// 1. PRIMERO: Inicializar el cliente de Supabase de manera segura
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Faltan las variables de entorno de Supabase.');
-}
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // ------------------------------------------------------------------
 // FUNCIONES PARA LUGARES (PLACES)
