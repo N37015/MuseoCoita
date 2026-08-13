@@ -1,8 +1,17 @@
 'use server';
 
-import { supabase } from './supabaseClient';
+import { createClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
-import path from 'path';
+
+// 1. PRIMERO: Inicializar el cliente de Supabase de manera segura
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Faltan las variables de entorno de Supabase.');
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // ------------------------------------------------------------------
 // FUNCIONES PARA LUGARES (PLACES)
@@ -140,7 +149,6 @@ export async function updateGallery(id: string, data: { title: string; images: s
     }
 }
 
-
 // ------------------------------------------------------------------
 // SISTEMA DE ARCHIVOS (UPLOAD A SUPABASE STORAGE)
 // ------------------------------------------------------------------
@@ -152,11 +160,12 @@ export async function uploadImages(formData: FormData) {
   const paths = [];
 
   for (const file of files) {
-    const extension = path.extname(file.name);
+    // Obtenemos la extensión de forma segura sin usar el módulo 'path'
+    const extension = file.name.substring(file.name.lastIndexOf('.'));
     const fileName = `${uuidv4()}${extension}`;
     
     const { data, error } = await supabase.storage
-      .from('images') // Nombre de tu bucket en Supabase
+      .from('images')
       .upload(fileName, file, {
         cacheControl: '3600',
         upsert: false,
@@ -164,10 +173,9 @@ export async function uploadImages(formData: FormData) {
 
     if (error) {
       console.error('Error uploading image:', error);
-      continue; // Salta al siguiente archivo si hay un error
+      continue;
     }
 
-    // Obtenemos la URL pública para almacenarla en la base de datos
     const { data: { publicUrl } } = supabase.storage
       .from('images')
       .getPublicUrl(data.path);
@@ -177,3 +185,47 @@ export async function uploadImages(formData: FormData) {
 
   return paths;
 }
+
+// ------------------------------------------------------------------
+// INTERFACES Y DICCIONARIOS
+// ------------------------------------------------------------------
+
+export interface RouteStep {
+  description: string;
+  imageUrl: string | null;
+}
+
+export interface PlaceSection {
+  type: string;
+  value: string;
+}
+
+export interface Place {
+  id: string;
+  name: string;
+  address: string;
+  category: string;
+  map_url?: string;
+  images?: string[];
+  sections: Record<string, any>;
+  created_at: string;
+}
+
+export const CATEGORY_NAMES: Record<string, string> = {
+  restaurant: 'Restaurantes',
+  cafeteria: 'Cafeterías',
+  hotel: 'Hoteles',
+  medical: 'Servicios Médicos',
+  route: 'Rutas', 
+  church: 'Iglesias / Templos',
+  attraction: 'Atractivos Turísticos'
+};
+
+export const CATEGORY_FIELDS: Record<string, string[]> = {
+  restaurant: ['Correo electrónico', 'Teléfono', 'Horario de servicios', 'Servicios', 'Página web', 'Facturan', 'Tipo de comida', 'Cafetería y postres', 'Bebidas', 'Espacios e instalaciones', 'Entretenimiento', 'Formas de pago', 'Costos'],
+  hotel: ['Correo electrónico', 'Teléfono', 'Horario de recepción', 'Servicios', 'Página web', 'Facturan', 'Formas de pago', 'Costos', 'Número de habitaciones', 'Tipos de habitación', 'Categoría / estrellas'],
+  cafeteria: ['Correo electrónico', 'Teléfono', 'Horario de atención', 'Servicios', 'Página web', 'Facturan', 'Formas de pago', 'Costos', 'Especialidades de café', 'Postres', 'Wi-Fi', 'Área de trabajo'],
+  medical: ['Correo electrónico', 'Teléfono', 'Horario de atención', 'Especialidad', 'Servicios', 'Página web', 'Facturan', 'Formas de pago', 'Costos / rango', 'Urgencias 24h', 'Seguros médicos', 'Médico responsable'],
+  church: ['Denominación / religión', 'Correo electrónico', 'Teléfono', 'Horario de misas', 'Servicios', 'Página web', 'Párroco / líder', 'Capacidad', 'Costos'],
+  attraction: ['Costo de entrada', 'Descripción', 'Actividades a realizar'] 
+};
