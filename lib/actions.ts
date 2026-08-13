@@ -3,7 +3,6 @@
 import { supabase } from './supabaseClient';
 import { v4 as uuidv4 } from 'uuid';
 
-
 // ------------------------------------------------------------------
 // FUNCIONES PARA LUGARES (PLACES)
 // ------------------------------------------------------------------
@@ -151,7 +150,6 @@ export async function uploadImages(formData: FormData) {
   const paths = [];
 
   for (const file of files) {
-    // Obtenemos la extensión de forma segura sin usar el módulo 'path'
     const extension = file.name.substring(file.name.lastIndexOf('.'));
     const fileName = `${uuidv4()}${extension}`;
     
