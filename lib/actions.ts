@@ -35,6 +35,8 @@ export async function getPlaceById(id: string) {
 }
 
 export async function savePlace(data: any) {
+  console.log("Datos recibidos para guardar:", data); // Esto saldrá en los Logs de Vercel
+
   const { data: placeData, error } = await supabase
     .from('places')
     .insert([
@@ -51,8 +53,8 @@ export async function savePlace(data: any) {
     .single();
 
   if (error) {
-    console.error('Error saving place:', error);
-    throw new Error('Could not save place.');
+    console.error('Error DETALLADO de Supabase al guardar lugar:', error); // <- AQUÍ VEREMOS EL ERROR REAL
+    throw new Error(`Could not save place: ${error.message}`);
   }
 
   return placeData.id;
